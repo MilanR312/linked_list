@@ -14,3 +14,4 @@ name = "mybin"
 path = "src/bin.rs"
 
 [dependencies]
+
