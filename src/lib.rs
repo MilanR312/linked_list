@@ -127,7 +127,8 @@ where T:Default{
         }
         let out = std::mem::replace(&mut element_to_remove.data, T::default());
         unsafe {
-            std::ptr::drop_in_place(element_to_remove.get_self_mut());
+            let b = Box::from_raw(element_to_remove.get_self_mut());
+            std::mem::drop(b);
         }
         Some(out)
     }
@@ -149,13 +150,15 @@ where T:Default{
             //linked list only has one element
             if (*self.head).next.is_null() {
                 //there is only one element in the list so we return it
-                //println!("extracting root");
+                println!("extracting root");
                 let out = std::mem::replace(&mut (*self.head).data, T::default());
-                std::ptr::drop_in_place(self.head);
+                let b = Box::from_raw(self.head);
+                std::mem::drop(b);
+                //std::ptr::drop_in_place(self.head);
                 self.head = null_mut();
                 Some(out)
             } else {
-                //println!("extracting element");
+                println!("extracting element");
                 let last_node = (*self.head).get_last_node();
                 /*if last_node.prev.is_null() {
                     return None;
@@ -169,7 +172,10 @@ where T:Default{
                 //get the value out
                 let out = std::mem::replace(&mut last_node.data, T::default());
                 //println!("dropping {:?}", last_node as *const Node<T>);
-                std::ptr::drop_in_place(last_node);
+                //std::ptr::drop_in_place(last_node);
+                let b = Box::from_raw(last_node);
+                std::mem::drop(b);
+                
                 Some(out)
             }
 
@@ -208,7 +214,9 @@ where T:Default{
             let out = std::mem::replace(&mut node_to_remove.data, T::default());
             //self.head = next_node;
             let old_node = std::mem::replace(&mut self.head, next_node);
-            std::ptr::drop_in_place(old_node);
+            let b = Box::from_raw(old_node);
+            std::mem::drop(b);
+
             Some(out)
 
         }

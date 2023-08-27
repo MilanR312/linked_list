@@ -1,5 +1,5 @@
 
-use linked_list::*;
+use linked_list::{*, node::Node};
 
 fn dothing<'a>(list: &LinkedList<&'a str>){
     list.iter().for_each(|f| println!("{f}"));
@@ -7,7 +7,8 @@ fn dothing<'a>(list: &LinkedList<&'a str>){
 
 fn main(){
     let mut root = LinkedList::new("test".to_string());
-    for i in 1..1000{
+    println!("node size = {}", std::mem::size_of::<Node<String>>());
+    for i in 1..10{
         let str = format!("{i}");
         root.push_back(str);
     }
@@ -16,8 +17,9 @@ fn main(){
     let c = root.extract_front();
 
     let str = "test".to_string();
-    root.insert(300, str);
-
-    let ptr = Box::leak(Box::new(vec![42; 100]));
-    println!("ptr={:?}", ptr)
+    root.insert(2, str);
+    for i in 1..10{
+        let str = format!("{i}");
+        root.push_back(str);
+    }
 }
